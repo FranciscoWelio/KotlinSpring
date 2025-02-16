@@ -1,4 +1,4 @@
 package br.com.teste.demo_teste.exception
 
-class TransactionException {
+class TransactionException(text: String) : RuntimeException(text) {
 }
