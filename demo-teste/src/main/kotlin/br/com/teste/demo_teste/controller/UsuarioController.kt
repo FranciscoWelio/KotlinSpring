@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/usuario")
-class UsuarioController {
-   var usuarioService: UsuarioService = TODO()
+class UsuarioController(private var usuarioService: UsuarioService) {
 
 
     @PostMapping("/create-user")
@@ -22,11 +21,7 @@ class UsuarioController {
         return usuarioService.addUsuario(usuario)
     }
 
-    fun UsuarioController(usuarioService: UsuarioService){
-        this.usuarioService = usuarioService
-    }
-
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     fun getDemo(@PathVariable("id") id: Long): Usuario{
         return usuarioService.getUsuario(id).orElse(null)
     }

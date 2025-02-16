@@ -4,13 +4,12 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 
 @Entity
-open class Usuario {
+open class Usuario() {
     @Id
     internal var id: Long = 0
-    internal var nome: String
-        get() = ""
-        set(value) = TODO()
-    internal var conta: String
-        get() = ""
-        set(value) = TODO()
+    internal var nome: String=""
+    internal var conta: String=""
+    internal var meal: Double =0.0
+    internal var food: Double =0.0
+    internal var cash: Double =0.0
 }

@@ -8,21 +8,15 @@ import jakarta.persistence.ManyToOne
 @Entity
 open class Transaction {
     @Id
-    private var id: Long = 0
+    internal var id: Long = 0
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    private val usuario: Usuario = TODO()
-    private var account: String
-        get() = ""
-        set(value) = TODO()
-    private var mcc: String
-        get() = ""
-        set(value) = TODO()
-    private var merchant: String
-        get() = ""
-        set(value) = TODO()
+    internal lateinit var  usuario: Usuario
+//    internal var account: String=""
+    internal var mcc: String=""
+//    internal var merchant: String=""
 
     @ManyToOne
     @JoinColumn(name = "merchant_id", nullable = false)
-    private val loja: Merchant
+    internal lateinit var loja: Merchant
 }

@@ -7,15 +7,8 @@ import jakarta.persistence.Id
 @Entity
 open class Merchant {
     @Id
-    private var id: Long =0
-    private var tipo : String
-        get() = ""
-        set(value) = TODO()
-    private var nome : String
-        get() = ""
-        set(value) = TODO()
-    private var localizacao: String
-        get() = ""
-        set(value) = TODO()
-
+    internal var id: Long =0
+    internal var tipo : String=""
+    internal var nome : String=""
+    internal var localizacao: String =""
 }

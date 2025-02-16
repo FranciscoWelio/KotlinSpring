@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service
 import java.util.Optional
 
 @Service
-class UsuarioService {
-    var usuarioRepository : UsuarioRepository = TODO()
-
+class UsuarioService(private var usuarioRepository : UsuarioRepository) {
     fun addUsuario(usuario: Usuario) :Usuario{
         var jaExiste: Boolean= usuarioRepository.existsById(usuario.id)
         if (jaExiste==true){
@@ -19,9 +17,6 @@ class UsuarioService {
 
     }
 
-    fun UsuarioService(usuarioRepository: UsuarioRepository){
-        this.usuarioRepository = usuarioRepository
-    }
     fun  getUsuario(id: Long):Optional<Usuario>{
         return usuarioRepository.findById(id)
     }
