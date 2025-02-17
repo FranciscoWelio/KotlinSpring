@@ -16,7 +16,6 @@ class UsuarioService(private var usuarioRepository : UsuarioRepository) {
         return usuarioRepository.save(usuario)
 
     }
-
     fun  getUsuario(id: Long):Optional<Usuario>{
         return usuarioRepository.findById(id)
     }
