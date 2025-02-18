@@ -17,7 +17,7 @@ class TransactionController(private var transactionService: TransactionService) 
 
     @PostMapping("fazendo-transaction")
     @Operation(summary = "Cria Transação", description = "Cria uma transação com o Id-Usuario, Id-Loja e valor-de-compra")
-    fun fazerTransaction(@RequestBody  requisition: TransactionReq):Transaction{
+    fun fazerTransaction(@RequestBody  requisition: TransactionReq):String{
          val transction = transactionService.fazerTransaction(requisition.usuarioId, requisition.merchantId, requisition.amount)
 
         return transction

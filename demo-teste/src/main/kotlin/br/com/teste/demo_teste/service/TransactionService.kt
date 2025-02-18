@@ -24,50 +24,77 @@ class TransactionService(private var transactionRepository :TransactionRepositor
                          private var merchantRepository: MerchantRepository) {
 
     @Transactional
-    fun fazerTransaction(usuarioId: Long, merchantId:Long, amount:Double ):Transaction {
+    fun fazerTransaction(usuarioId: Long, merchantId:Long, amount:Double ):String {
         val usuarioOP: Optional<Usuario> = usuarioRepository.findById(usuarioId)
         val usuario = usuarioOP.get()
         val merchantOP: Optional<Merchant> = merchantRepository.findById(merchantId)
         val merchant = merchantOP.get()
-        if (merchant.mcc == "5411" || merchant.mcc =="5412"){
-            if (usuario.food<amount &&  usuario.cash>=amount){
+        val merchantLocal = merchant.nome + " " + merchant.localizacao
+        var code: String = ""
+        if(amount<0){
+            return "Code: 07"
+        }
+        if (merchant.mcc == "5411" || merchant.mcc == "5412") {
+            if (usuario.food < amount && usuario.cash >= amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                code = "Code: 00"
 
-            }else if(usuario.food<amount &&  usuario.cash<amount){
-                throw UsuarioException("Saldo insuficiente")
-            }else{
+            } else if (usuario.food < amount && usuario.cash < amount && amount >0) {
+                code ="Code: 51"
+            } else {
                 usuario.food -= amount
                 usuarioRepository.save(usuario)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                code = "Code: 00"
             }
 
-        }else if (merchant.mcc == "5811" || merchant.mcc =="5812"){
-            if (usuario.meal<amount &&  usuario.cash>=amount){
+        } else if (merchant.mcc == "5811" || merchant.mcc == "5812") {
+            if (usuario.meal < amount && usuario.cash >= amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
-            }else if(usuario.meal<amount &&  usuario.cash<amount){
-                throw UsuarioException("Saldo insuficiente")
+                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                code = "Code: 00"
+            } else if (usuario.meal < amount && usuario.cash < amount && amount >0) {
+                code = "Code: 51"
 
-            }else{
+            } else {
                 usuario.meal -= amount
                 usuarioRepository.save(usuario)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                code = "Code: 00"
             }
-        }else if(merchant.mcc != "5811" && merchant.mcc != "5812" && merchant.mcc != "5411" && merchant.mcc != "5412"){
-            if (usuario.cash<amount){
-                throw UsuarioException("Saldo insuficiente")
+        } else if (merchant.mcc != "5811" || merchant.mcc != "5812" || merchant.mcc != "5411" || merchant.mcc != "5412") {
+            if (usuario.cash > amount && amount >0) {
+                usuario.cash -= amount
+                usuarioRepository.save(usuario)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                code = "Code: 00"
+
+            } else {
+                code = "Code: 51"
             }
-            usuario.cash -= amount
-            usuarioRepository.save(usuario)
         }
-            val merchantLocal = merchant.nome +" "+ merchant.localizacao
-            var transaction :Transaction = Transaction()
-            transaction.amount = amount
-            transaction.account = usuario.conta
-            transaction.mcc = merchant.mcc
-            transaction.merchant = merchantLocal
-        return transactionRepository.save(transaction)
+
+        return code
     }
 
+
+
+
+    fun createTransaction(amount: Double, account:String, mcc:String, merchantLocal:String, usuarioId:Long, merchantId:Long):Transaction{
+        val usuarioOP: Optional<Usuario> = usuarioRepository.findById(usuarioId)
+        val usuario = usuarioOP.get()
+        val merchantOP: Optional<Merchant> = merchantRepository.findById(merchantId)
+        val merchant = merchantOP.get()
+        val transaction :Transaction = Transaction( )
+        transaction.amount = amount
+        transaction.account = usuario.conta
+        transaction.mcc = merchant.mcc
+        transaction.merchant = merchantLocal
+        return transactionRepository.save(transaction)
+    }
     fun  getTransaction(id: Long): Optional<Transaction> {
         return transactionRepository.findById(id)
     }
