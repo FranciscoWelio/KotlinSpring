@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/usuario")
 class UsuarioController(private var usuarioService: UsuarioService) {
 
-
     @PostMapping("/create-user")
-
     fun addUsuario(@RequestBody usuario: Usuario): Usuario{
         return usuarioService.addUsuario(usuario)
     }

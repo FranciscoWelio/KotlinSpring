@@ -8,9 +8,9 @@ import br.com.teste.demo_teste.repository.MerchantRepository
 import br.com.teste.demo_teste.repository.TransactionRepository
 import br.com.teste.demo_teste.repository.UsuarioRepository
 
-import jakarta.transaction.Transactional
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
 import java.util.*
 
 @Suppress("UNREACHABLE_CODE")
@@ -19,13 +19,12 @@ class TransactionService(private var transactionRepository :TransactionRepositor
                          private var usuarioRepository: UsuarioRepository,
                          private var merchantRepository: MerchantRepository) {
 
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional(isolation = Isolation.READ_COMMITTED)
     fun fazerTransaction(usuarioId: Long, merchantId:Long, amount:Double ):String {
         val usuarioOP: Optional<Usuario> = usuarioRepository.findById(usuarioId)
         val usuario = usuarioOP.get()
         val merchantOP: Optional<Merchant> = merchantRepository.findById(merchantId)
         val merchant = merchantOP.get()
-        val merchantLocal = merchant.nome + " " + merchant.localizacao
         var code: String = ""
         if(amount<0){
             return "Code: 07"
@@ -34,7 +33,7 @@ class TransactionService(private var transactionRepository :TransactionRepositor
             if (usuario.food < amount && usuario.cash >= amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
-                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchant.nome, usuarioId, merchantId)
                 code = "Code: 00"
 
             } else if (usuario.food < amount && usuario.cash < amount && amount >0) {
@@ -42,7 +41,7 @@ class TransactionService(private var transactionRepository :TransactionRepositor
             } else {
                 usuario.food -= amount
                 usuarioRepository.save(usuario)
-                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchant.nome, usuarioId, merchantId)
                 code = "Code: 00"
             }
 
@@ -50,7 +49,7 @@ class TransactionService(private var transactionRepository :TransactionRepositor
             if (usuario.meal < amount && usuario.cash >= amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
-                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchant.nome, usuarioId, merchantId)
                 code = "Code: 00"
             } else if (usuario.meal < amount && usuario.cash < amount && amount >0) {
                 code = "Code: 51"
@@ -58,14 +57,14 @@ class TransactionService(private var transactionRepository :TransactionRepositor
             } else {
                 usuario.meal -= amount
                 usuarioRepository.save(usuario)
-                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchant.nome, usuarioId, merchantId)
                 code = "Code: 00"
             }
         } else if (merchant.mcc != "5811" || merchant.mcc != "5812" || merchant.mcc != "5411" || merchant.mcc != "5412") {
             if (usuario.cash > amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
-                createTransaction(amount, usuario.conta, merchant.mcc, merchantLocal, usuarioId, merchantId)
+                createTransaction(amount, usuario.conta, merchant.mcc, merchant.nome, usuarioId, merchantId)
                 code = "Code: 00"
 
             } else {
@@ -79,11 +78,12 @@ class TransactionService(private var transactionRepository :TransactionRepositor
 
 
 
-    fun createTransaction(amount: Double, account:String, mcc:String, merchantLocal:String, usuarioId:Long, merchantId:Long):Transaction{
+    fun createTransaction(amount: Double, account:String, mcc:String, localizacao:String, usuarioId:Long, merchantId:Long):Transaction{
         val usuarioOP: Optional<Usuario> = usuarioRepository.findById(usuarioId)
         val usuario = usuarioOP.get()
         val merchantOP: Optional<Merchant> = merchantRepository.findById(merchantId)
         val merchant = merchantOP.get()
+        val merchantLocal = merchant.nome + " " + merchant.localizacao
         val transaction :Transaction = Transaction( )
         transaction.amount = amount
         transaction.account = usuario.conta
