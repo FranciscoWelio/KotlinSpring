@@ -12,7 +12,7 @@ Resolução: Foi criado 3 entidades
 - Merchant (Loja/Local de compra)
 - Usuario (Beneficiário do cartão que fará a compra)
 - Transaction(Estruta a transação feita pelo o Usuário na Loja/Local)
-- 
+
 Foi criado 6 Endpoints,
 - 3 Post
   - Criar Usuário
