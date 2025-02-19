@@ -15,6 +15,12 @@ class MerchantService(private var merchantRepository :MerchantRepository) {
         if (jaExiste==true){
             throw MerchantException("Mercador já Cadastrado")
         }
+        if(merchant.nome.isBlank()){
+            throw MerchantException("Nome vazio")
+        }
+        if(merchant.localizacao.isBlank()){
+            throw MerchantException("Localização vazia")
+        }
         if((merchant.mcc=="5412"|| merchant.mcc =="5411")){
             merchant.nome += " Mercado"
             return merchantRepository.save(merchant)

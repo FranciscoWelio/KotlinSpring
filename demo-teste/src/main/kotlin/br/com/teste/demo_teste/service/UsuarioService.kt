@@ -13,6 +13,18 @@ class UsuarioService(private var usuarioRepository : UsuarioRepository) {
         if (jaExiste==true){
             throw UsuarioException("Usuário Cadastrado")
         }
+        if(usuario.conta.isBlank()){
+            throw UsuarioException("Conta vazia")
+        }
+        if(usuario.nome.isBlank()){
+            throw UsuarioException("Nome vazio")
+        }
+        if(usuario.meal <=0.0 || usuario.food <= 0.0 || usuario.cash <= 0.0){
+            usuario.meal =0.0
+            usuario.food = 0.0
+            usuario.cash = 0.0
+            return usuarioRepository.save(usuario)
+        }
         return usuarioRepository.save(usuario)
 
     }
