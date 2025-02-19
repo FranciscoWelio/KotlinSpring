@@ -5,6 +5,7 @@
 lá, você encontrará os links do Swagger e do Banco H2 com as instruções para acessar o banco
 ## Configurações utilizadas
 - Kotlin 1.9.25
+- IDE: IntelliJ IDEA Community Edition 2024.3.2.2
 - SpringBoot 3.4.2
 
 ---
