@@ -1,5 +1,8 @@
 ﻿# Teste Técnico - Francisco Welio Firmino da Silva Junior
 
+## Ao rodar o projeto Abri o localhost:8080/
+ - O levará para o index.hmtl que é a página inical do projeto
+lá, você encontrará os links do Swagger e do Banco H2 com as instruções para acessar o banco
 ## Configurações utilizadas
 - Kotlin 1.9.25
 - SpringBoot 3.4.2
