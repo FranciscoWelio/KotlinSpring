@@ -3,17 +3,13 @@ package br.com.teste.demo_teste.service
 import br.com.teste.demo_teste.entity.Merchant
 import br.com.teste.demo_teste.entity.Transaction
 import br.com.teste.demo_teste.entity.Usuario
-import br.com.teste.demo_teste.exception.TransactionException
-import br.com.teste.demo_teste.exception.UsuarioException
+
 import br.com.teste.demo_teste.repository.MerchantRepository
 import br.com.teste.demo_teste.repository.TransactionRepository
 import br.com.teste.demo_teste.repository.UsuarioRepository
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
+
 import jakarta.transaction.Transactional
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -34,7 +30,7 @@ class TransactionService(private var transactionRepository :TransactionRepositor
         if(amount<0){
             return "Code: 07"
         }
-        if (merchant.mcc == "5411" || merchant.mcc == "5412") {
+        if (merchant.mcc == "5411" || merchant.mcc == "5412" || merchant.nome.contains("Mercado", ignoreCase = true)) {
             if (usuario.food < amount && usuario.cash >= amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
@@ -50,7 +46,7 @@ class TransactionService(private var transactionRepository :TransactionRepositor
                 code = "Code: 00"
             }
 
-        } else if (merchant.mcc == "5811" || merchant.mcc == "5812") {
+        } else if (merchant.mcc == "5811" || merchant.mcc == "5812" || merchant.nome.contains("Restaurante", ignoreCase = true)) {
             if (usuario.meal < amount && usuario.cash >= amount && amount >0) {
                 usuario.cash -= amount
                 usuarioRepository.save(usuario)
