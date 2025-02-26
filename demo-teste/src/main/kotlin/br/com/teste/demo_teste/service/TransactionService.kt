@@ -26,7 +26,7 @@ class TransactionService(private var transactionRepository :TransactionRepositor
         val merchantOP: Optional<Merchant> = merchantRepository.findById(merchantId)
         val merchant = merchantOP.get()
         var code: String = ""
-        if(amount<0){
+        if(amount<0) {
             return "Code: 07"
         }
         if (merchant.mcc == "5411" || merchant.mcc == "5412" || merchant.nome.contains("Mercado", ignoreCase = true)) {

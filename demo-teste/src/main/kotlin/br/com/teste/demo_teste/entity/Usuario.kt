@@ -1,12 +1,10 @@
 package br.com.teste.demo_teste.entity
 
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Pattern
 
 @Entity
 open class Usuario(){
@@ -15,6 +13,8 @@ open class Usuario(){
     @NotBlank(message = "Nome não pode ser vazio")
     internal var nome: String = ""
     @NotBlank(message = "Conta não pode ser vazio")
+    @Column(unique = true)
+    @Pattern(regexp = "\\d{4}-\\d{1}", message = "A conta deve estar no formato 1234-5")
     internal var conta: String = ""
     @NotNull(message = "Valor Meal não pode ser nula")
     internal var meal: Double = 0.0

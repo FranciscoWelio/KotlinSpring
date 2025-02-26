@@ -2,6 +2,7 @@ package br.com.teste.demo_teste.controller
 
 import br.com.teste.demo_teste.entity.Usuario
 import br.com.teste.demo_teste.service.UsuarioService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class UsuarioController(private var usuarioService: UsuarioService) {
 
     @PostMapping("/create-user")
-    fun addUsuario(@RequestBody usuario: Usuario): Usuario{
+    fun addUsuario(@Valid @RequestBody usuario: Usuario): Usuario{
         return usuarioService.addUsuario(usuario)
     }
 
